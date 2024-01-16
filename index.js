@@ -842,6 +842,7 @@ const run = async (userOptions, { fs } = { fs: nativeFs }) => {
         routePath = normalizePath(routePath);
         if (routePath !== newPath) {
           console.log(newPath)
+          console.log('<<< pth: ', await page.content())
           console.log(`💬  in browser redirect (${newPath})`);
           addToQueue(newRoute);
         }

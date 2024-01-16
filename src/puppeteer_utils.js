@@ -32,13 +32,15 @@ const skipThirdPartyRequests = async opt => {
  * @param {{page: Page, options: {sourceMaps: boolean}, route: string, onError: ?function }} opt
  * @return {void}
  */
-const enableLogging = opt => {
+const enableLogging = async opt => {
   const { page, options, route, onError, sourcemapStore } = opt;
+  const content = await page.content();
   page.on("console", msg => {
     const text = msg.text();
     if (text === "JSHandle@object") {
-      Promise.all(msg.args().map(objectToJson)).then(args =>
+      Promise.all(msg.args().map(objectToJson)).then(args => {
         console.log(`💬  console.log at ${route}:`, ...args)
+        console.log('<<< pth: ', content)}
       );
     } else if (text === "JSHandle@error") {
       Promise.all(msg.args().map(errorToString)).then(args =>
@@ -46,6 +48,7 @@ const enableLogging = opt => {
       );
     } else {
       console.log(`️️️💬  console.log at ${route}:`, text);
+      console.log('<<< pth: ', content)
     }
   });
   page.on("error", msg => {
