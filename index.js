@@ -600,6 +600,7 @@ const fixFormFields = ({ page }) => {
 
 const saveAsHtml = async ({ page, filePath, options, route, fs }) => {
   let content = await page.content();
+  console.log('<< content: ', content)
   content = content.replace(/react-snap-onload/g, "onload");
   const title = await page.title();
   const minifiedContent = options.minifyHtml
