@@ -236,14 +236,11 @@ const removeScriptTags = ({ page }) =>
     });
   });
 
-const updateFrameSrcs = ({ page }) =>
+const removeIFrames = ({ page }) =>
   page.evaluate(() => {
     Array.from(document.querySelectorAll("iframe")).forEach(iframe => {
-      const dataSrc = iframe.getAttribute("data-src")
-      if(dataSrc) {
-        console.log(">>> iframe found with data-src", dataSrc)
-        iframe.setAttribute("src", dataSrc);
-      }
+      console.log(">>> removing iframe", iframe.src)
+      iframe.remove();
     });
   });
   
@@ -771,7 +768,7 @@ const run = async (userOptions, { fs } = { fs: nativeFs }) => {
         }
       }
       console.log(">>>> post frames");
-      updateFrameSrcs({ page });
+      removeIFrames({ page });
       console.log(">>>> done post processing frames");
 
       if (options.fixWebpackChunksIssue === "Parcel") {
