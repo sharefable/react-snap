@@ -236,6 +236,19 @@ const removeScriptTags = ({ page }) =>
     });
   });
 
+const updateFrameSrcs = ({ page }) =>
+  page.evaluate(() => {
+    Array.from(document.querySelectorAll("iframe")).forEach(iframe => {
+      const dataSrc = iframe.getAttribute("data-src")
+      if(dataSrc) {
+        console.log(">>> iframe found with data-src", dataSrc)
+        iframe.setAttribute("src", dataSrc);
+      }
+    });
+  });
+  
+
+
 const preloadPolyfill = nativeFs.readFileSync(
   `${__dirname}/vendor/preload_polyfill.min.js`,
   "utf8"
@@ -757,6 +770,9 @@ const run = async (userOptions, { fs } = { fs: nativeFs }) => {
           }
         }
       }
+      console.log(">>>> post frames");
+      updateFrameSrcs({ page });
+      console.log(">>>> done post processing frames");
 
       if (options.fixWebpackChunksIssue === "Parcel") {
         await fixParcelChunksIssue({
